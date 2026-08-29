@@ -1,1 +1,5 @@
 config/config.toml
+.env
+*.local
+codex-home/
+logs/
