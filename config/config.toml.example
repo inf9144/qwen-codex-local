@@ -1,0 +1,77 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+model = "qwen3.8-27b"
+model_provider = "llamacpp_qwen"
+
+# Replace this with the absolute path to this repository's catalog.
+model_catalog_json = "/path/to/qwen3.8-codex-local/config/model-catalog-qwen.json"
+
+model_context_window = 149504
+model_auto_compact_token_limit = 125000
+model_auto_compact_token_limit_scope = "total"
+
+model_reasoning_effort = "high"
+model_reasoning_summary = "none"
+model_supports_reasoning_summaries = false
+show_raw_agent_reasoning = true
+
+[model_providers.llamacpp_qwen]
+# Keep this name: Codex uses it to select Responses remote-compaction V2.
+name = "OpenAI"
+base_url = "http://127.0.0.1:8080/v1"
+wire_api = "responses"
+requires_openai_auth = false
+stream_idle_timeout_ms = 1800000
+stream_max_retries = 5
+
+[mcp_servers.msdocs]
+url = "https://learn.microsoft.com/api/mcp"
+enabled = true
+
+[mcp_servers.dxdocs]
+url = "https://api.devexpress.com/mcp/docs"
+enabled = true
+
+[mcp_servers.playwright]
+command = "npx"
+args = [
+    "-y",
+    "@playwright/mcp@latest",
+    "--browser=chrome",
+    "--headless",
+    "--caps=vision,pdf,devtools,network,storage,testing,config",
+    "--allow-unrestricted-file-access",
+    "--grant-permissions=geolocation,clipboard-read,clipboard-write",
+]
+enabled = true
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+enabled = true
+
+[mcp_servers.websearch]
+command = "uvx"
+args = [
+    "--with",
+    "mcp<2",
+    "--with",
+    "duckduckgo-mcp-server[browser]",
+    "duckduckgo-mcp-server",
+    "--search-backend",
+    "auto",
+]
+enabled = true
+enabled_tools = ["search"]
+
+[mcp_servers.fetch]
+command = "uvx"
+args = [
+    "--with",
+    "mcp<2",
+    "mcp-server-fetch",
+    "--ignore-robots-txt",
+    "--user-agent",
+    "Mozilla/5.0 (X11; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0",
+]
+enabled = true
